@@ -18,7 +18,7 @@ public class ExpenseTracker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer number;
     private String itemDescription;
-    private double date;
+    private LocalDate date;
     private double amount;
     private String category;
     public Integer getNumber() {
@@ -33,10 +33,10 @@ public class ExpenseTracker {
     public void setItemDescription(String itemDescription) {
         this.itemDescription = itemDescription;
     }
-    public double getDate() {
+    public LocalDate getDate() {
         return date;
     }
-    public void setDate(double date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
     public double getAmount() {
@@ -53,7 +53,7 @@ public class ExpenseTracker {
     }
     public ExpenseTracker() {
     }
-    public ExpenseTracker(int number, String itemDescription, double date, double amount, String category) {
+    public ExpenseTracker(int number, String itemDescription, LocalDate date, double amount, String category) {
         this.number = number;
         this.itemDescription = itemDescription;
         this.date = date;
