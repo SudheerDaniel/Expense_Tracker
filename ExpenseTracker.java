@@ -27,6 +27,7 @@ public class ExpenseTracker {
     private String paymentMethod;
     private String receiptUrl;
     private String notes;
+    private String merchant;
     public Integer getNumber() {
         return number;
     }
@@ -81,9 +82,15 @@ public class ExpenseTracker {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+    public String getMerchant() {
+        return merchant;
+    }
+    public void setMerchant(String merchant) {
+        this.merchant = merchant;
+    }
     public ExpenseTracker() {
     }
-    public ExpenseTracker(int number, String itemDescription, LocalDate date, double amount, String category, String subCategory, String paymentMethod, String receiptUrl, String notes) {
+    public ExpenseTracker(int number, String itemDescription, LocalDate date, double amount, String category, String subCategory, String paymentMethod, String receiptUrl, String notes, String merchant) {
         this.number = number;
         this.itemDescription = itemDescription;
         this.date = date;
@@ -93,6 +100,7 @@ public class ExpenseTracker {
         this.paymentMethod = paymentMethod;
         this.receiptUrl = receiptUrl;
         this.notes = notes;
+        this.merchant = merchant;
     }
     
     
