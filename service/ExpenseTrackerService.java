@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.springbootmvcexample.model.ExpenseTracker;
 import com.example.springbootmvcexample.repository.ExpenseTrackerRepository;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ExpenseTrackerService {
@@ -57,6 +56,18 @@ public class ExpenseTrackerService {
    public List<ExpenseTracker> getExpenseByItemDescription (String itemDescription){
         return expenseRepo.findByItemDescription(itemDescription);
    }
+   public List<ExpenseTracker> getExpenseBySubCategory(String subCategory){
+        return expenseRepo.findBySubCategory(subCategory);
+   }
+   public List<ExpenseTracker> getExpensesByMerchant(String merchant){
+        return expenseRepo.findByMerchant(merchant);
+   }
+   public List<ExpenseTracker> getExpensesByPaymentMethod(String paymentMethod){
+        return expenseRepo.findByPaymentMethod(paymentMethod);
+   }
+   public List<ExpenseTracker> getExpensesByNotes(String notes){
+        return expenseRepo.findByNotes(notes);
+   }
    public void deleteExpense(int id){
         expenseRepo.deleteById(id);
    }
@@ -72,6 +83,11 @@ public class ExpenseTrackerService {
             expense.setDate(updatedExpense.getDate());
             expense.setAmount(updatedExpense.getAmount());
             expense.setCategory(updatedExpense.getCategory());
+            expense.setSubCategory(updatedExpense.getSubCategory());
+            expense.setPaymentMethod(updatedExpense.getPaymentMethod());
+            expense.setReceiptUrl(updatedExpense.getReceiptUrl());
+            expense.setNotes(updatedExpense.getNotes());
+            expense.setMerchant(updatedExpense.getMerchant());
             return expenseRepo.save(expense);
         })
         .orElseThrow(() -> new RuntimeException("Expense not found with id " + id));
@@ -88,6 +104,11 @@ public class ExpenseTrackerService {
         expense.setDate(updatedExpense.getDate());
         expense.setAmount(updatedExpense.getAmount());
         expense.setCategory(updatedExpense.getCategory());
+        expense.setSubCategory(updatedExpense.getSubCategory());
+        expense.setPaymentMethod(updatedExpense.getPaymentMethod());
+        expense.setReceiptUrl(updatedExpense.getReceiptUrl());
+        expense.setNotes(updatedExpense.getNotes());
+        expense.setMerchant(updatedExpense.getMerchant());
         return expenseRepo.save(expense);
 
    }
