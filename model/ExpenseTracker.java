@@ -20,7 +20,7 @@ import jakarta.persistence.Table;
 public class ExpenseTracker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer number;
+    private Integer id;
     private String itemDescription;
     private LocalDate date;
     private double amount;
@@ -30,11 +30,11 @@ public class ExpenseTracker {
     private String receiptUrl;
     private String notes;
     private String merchant;
-    // public Integer getNumber() {
-    //     return number;
+    // public Integer getId() {
+    //     return id;
     // }
-    // public void setNumber(Integer number) {
-    //     this.number = number;
+    // public void setId(Integer id) {
+    //     this.id = id;
     // }
     // public String getItemDescription() {
     //     return itemDescription;
@@ -92,8 +92,8 @@ public class ExpenseTracker {
     // }
     // public ExpenseTracker() {
     // }
-    // public ExpenseTracker(int number, String itemDescription, LocalDate date, double amount, String category, String subCategory, String paymentMethod, String receiptUrl, String notes, String merchant) {
-    //     this.number = number;
+    // public ExpenseTracker(int id, String itemDescription, LocalDate date, double amount, String category, String subCategory, String paymentMethod, String receiptUrl, String notes, String merchant) {
+    //     this.id = id;
     //     this.itemDescription = itemDescription;
     //     this.date = date;
     //     this.amount = amount;
