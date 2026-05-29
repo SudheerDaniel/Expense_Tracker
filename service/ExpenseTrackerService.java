@@ -2,14 +2,16 @@ package com.example.springbootmvcexample.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.springbootmvcexample.model.ExpenseTracker;
 import com.example.springbootmvcexample.repository.ExpenseTrackerRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ExpenseTrackerService {
     /*List <expenseTracker> expenses = new ArrayList<>();
     expenseTrackerRepository exr = new expenseTrackerRepository();
@@ -42,8 +44,7 @@ public class ExpenseTrackerService {
         }
         return null;
     }*/
-   @Autowired
-   private ExpenseTrackerRepository expenseRepo;
+   private final ExpenseTrackerRepository expenseRepo;
    public List<ExpenseTracker> getAllExpenses() {
      return expenseRepo.findAll();
    }
@@ -66,7 +67,7 @@ public class ExpenseTrackerService {
         return expenseRepo.findByPaymentMethod(paymentMethod);
    }
    public List<ExpenseTracker> getExpensesByNotes(String notes){
-        return expenseRepo.findByNotes(notes);
+        return expenseRepo.findByNotesContainingIgnoreCase(notes);
    }
    public void deleteExpense(int id){
         expenseRepo.deleteById(id);
