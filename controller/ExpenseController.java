@@ -1,12 +1,7 @@
 package com.example.springbootmvcexample.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
-
-import com.example.springbootmvcexample.service.ExpenseTrackerService;
-import com.example.springbootmvcexample.model.ExpenseTracker;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,67 +9,84 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.example.springbootmvcexample.model.ExpenseTracker;
+import com.example.springbootmvcexample.service.ExpenseTrackerService;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/expenses")
 public class ExpenseController {
-    @Autowired
-    ExpenseTrackerService expenseService;
+
+    private final ExpenseTrackerService expenseService;
+
+    public ExpenseController(ExpenseTrackerService expenseService) {
+        this.expenseService = expenseService;
+    }
 
     @GetMapping
-    public List<ExpenseTracker> getAllExpenses() {
-        return expenseService.getAllExpenses();
+    public ResponseEntity<List<ExpenseTracker>> getAllExpenses() {
+        return ResponseEntity.ok(expenseService.getAllExpenses());
     }
 
     @PostMapping
-    public void addExpense(@RequestBody ExpenseTracker expense) {
+    public ResponseEntity<Void> addExpense(@RequestBody ExpenseTracker expense) {
         expenseService.addExpenses(expense);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/item/{itemDescription}")
-    public ExpenseTracker updateExpenseByItemDescription(@PathVariable String itemDescription,@RequestBody ExpenseTracker updatedExpense) {
-       return  expenseService.updateExpenseByItemDescription(itemDescription, updatedExpense);
-    } 
+    public ResponseEntity<ExpenseTracker> updateExpenseByItemDescription(@PathVariable String itemDescription, @RequestBody ExpenseTracker updatedExpense) {
+        return ResponseEntity.ok(expenseService.updateExpenseByItemDescription(itemDescription, updatedExpense));
+    }
+
     @PutMapping("/{id}")
-    public ExpenseTracker updateExpense(@PathVariable int id,@RequestBody ExpenseTracker updatedExpense){
-        return expenseService.updateExpense(id, updatedExpense);
+    public ResponseEntity<ExpenseTracker> updateExpense(@PathVariable int id, @RequestBody ExpenseTracker updatedExpense) {
+        return ResponseEntity.ok(expenseService.updateExpense(id, updatedExpense));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteExpense(@PathVariable int id) {
+    public ResponseEntity<Void> deleteExpense(@PathVariable int id) {
         expenseService.deleteExpense(id);
+        return ResponseEntity.noContent().build();
     }
+
     @DeleteMapping("/category/{category}")
-    public void deleteExpenseByCategory(@PathVariable String category) {
+    public ResponseEntity<Void> deleteExpenseByCategory(@PathVariable String category) {
         expenseService.deleteExpenseByCategory(category);
+        return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/category/{category}")
-    public List<ExpenseTracker> getExpenseByCategory(@PathVariable String category) {
-       return expenseService.getExpenseByCategory(category);
+    public ResponseEntity<List<ExpenseTracker>> getExpenseByCategory(@PathVariable String category) {
+        return ResponseEntity.ok(expenseService.getExpenseByCategory(category));
     }
+
     @GetMapping("/item/{itemDescription}")
-    public List<ExpenseTracker> getExpenseByItemDescription(@PathVariable String itemDescription) {
-        return expenseService.getExpenseByItemDescription(itemDescription);
+    public ResponseEntity<List<ExpenseTracker>> getExpenseByItemDescription(@PathVariable String itemDescription) {
+        return ResponseEntity.ok(expenseService.getExpenseByItemDescription(itemDescription));
     }
+
     @GetMapping("/subcategory/{subCategory}")
-    public List<ExpenseTracker> getExpenseBySubCategory(@PathVariable String subCategory) {
-        return expenseService.getExpenseBySubCategory(subCategory);
+    public ResponseEntity<List<ExpenseTracker>> getExpenseBySubCategory(@PathVariable String subCategory) {
+        return ResponseEntity.ok(expenseService.getExpenseBySubCategory(subCategory));
     }
+
     @GetMapping("/merchant/{merchant}")
-    public List<ExpenseTracker> getExpensesByMerchant(@PathVariable String merchant) {
-        return expenseService.getExpensesByMerchant(merchant);
+    public ResponseEntity<List<ExpenseTracker>> getExpensesByMerchant(@PathVariable String merchant) {
+        return ResponseEntity.ok(expenseService.getExpensesByMerchant(merchant));
     }
+
     @GetMapping("/paymentmethod/{paymentMethod}")
-    public List<ExpenseTracker> getExpensesByPaymentMethod(@PathVariable String paymentMethod) {
-        return expenseService.getExpensesByPaymentMethod(paymentMethod);
+    public ResponseEntity<List<ExpenseTracker>> getExpensesByPaymentMethod(@PathVariable String paymentMethod) {
+        return ResponseEntity.ok(expenseService.getExpensesByPaymentMethod(paymentMethod));
     }
-    @GetMapping("/notes/{notes}")
-    public List<ExpenseTracker> getExpensesByNotes(@PathVariable String notes) {
-        return expenseService.getExpensesByNotes(notes);
+
+    @GetMapping("/notes")
+    public ResponseEntity<List<ExpenseTracker>> getExpensesByNotes(@RequestParam String notes) {
+        return ResponseEntity.ok(expenseService.getExpensesByNotes(notes));
     }
-   
-
-
 }
