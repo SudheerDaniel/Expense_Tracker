@@ -13,37 +13,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ExpenseTrackerService {
-    /*List <expenseTracker> expenses = new ArrayList<>();
-    expenseTrackerRepository exr = new expenseTrackerRepository();
-    public List<expenseTracker> getAllExpenses(){
-        return exr.getAll();
-    }
-    public void addExpenses(expenseTracker expense){
-       // expenses.add(expense);
-       exr.save(expense);
-    }
-    public List<expenseTracker> getExpenseByCategory(String category){
-        return exr.getExpenseByCat(category);
-    }
-        
-    public void deleteExpense(String itemDescription){
-        exr.delete(itemDescription);
-    }
-    public void updateExpense(String oldItemDescription, String itemDescription, double date, double amount,String category){
 
-        exr.update(oldItemDescription, itemDescription, date, amount, category);
-    }
-    public List<expenseTracker> updateExpenseByItemDescription(String itemDescription){
-        for(expenseTracker expense: expenses){
-            List<expenseTracker> y = new ArrayList<>();
-            if(expense.getItemDescription().equals(itemDescription)){
-                y.add(expense);
-                return y;
-            }
-
-        }
-        return null;
-    }*/
    private final ExpenseTrackerRepository expenseRepo;
    public List<ExpenseTracker> getAllExpenses() {
      return expenseRepo.findAll();
