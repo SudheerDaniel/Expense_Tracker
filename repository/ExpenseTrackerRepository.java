@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.springbootmvcexample.model.ExpenseTracker;
 
 @Repository
-public interface ExpenseTrackerRepository extends JpaRepository<ExpenseTracker, Integer>  {
+public interface ExpenseTrackerRepository extends JpaRepository<ExpenseTracker, Long>  {
 
     List<ExpenseTracker> findByCategory(String category);
 
@@ -29,6 +29,26 @@ public interface ExpenseTrackerRepository extends JpaRepository<ExpenseTracker, 
     List<ExpenseTracker> findByPaymentMethod(String paymentMethod);
 
     List<ExpenseTracker> findByNotesContainingIgnoreCase(String notes);
+
+    List<ExpenseTracker> findByUserIdAndCategory (Long userId, String category);
+
+    List<ExpenseTracker> findByUserIdAndItemDescription(Long userId, String itemDescription);
+
+    List<ExpenseTracker> findByUserIdAndSubCategory(Long userId, String subCategory);
+
+    List<ExpenseTracker> findByUserIdAndMerchant(Long userId, String merchant);
+
+    List<ExpenseTracker> findByUserIdAndPaymentMethod(Long userId, String paymentMethod);
+
+    List<ExpenseTracker> findByUserIdAndNotesContainingIgnoreCase(Long userId, String notes);
+
+    List<ExpenseTracker> findByUserId(Long userId);
+
+    @Transactional
+    void deleteByUserIdAndId(Long userId, Long id);
+
+    @Transactional
+    void deleteByUserIdAndCategory(Long userId, String category);
 
     
 
