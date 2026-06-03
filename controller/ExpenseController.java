@@ -1,5 +1,7 @@
 package com.example.springbootmvcexample.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springbootmvcexample.model.ExpenseTracker;
 import com.example.springbootmvcexample.service.ExpenseTrackerService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/expenses")
@@ -44,12 +44,12 @@ public class ExpenseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ExpenseTracker> updateExpense(@PathVariable int id, @RequestBody ExpenseTracker updatedExpense) {
+    public ResponseEntity<ExpenseTracker> updateExpense(@PathVariable Long id, @RequestBody ExpenseTracker updatedExpense) {
         return ResponseEntity.ok(expenseService.updateExpense(id, updatedExpense));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExpense(@PathVariable int id) {
+    public ResponseEntity<Void> deleteExpense(@PathVariable Long id) {
         expenseService.deleteExpense(id);
         return ResponseEntity.noContent().build();
     }
