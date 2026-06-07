@@ -1,5 +1,4 @@
-target/
-.git/
+x.git/
 *.md
 .gitignore
 .vscode/
