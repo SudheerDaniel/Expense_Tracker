@@ -25,7 +25,7 @@ public class S3Service {
 
     public S3Service(S3Client s3Client, @Value("${aws.bucket.name:dummy}") String bucketName) {
         this.s3Client = s3Client;
-        this.BUCKET_NAME = bucketName;
+        this.BUCKET_NAME = bucketName; // Default value set to "dummy-bucket" for local development, replace with actual bucket name in production
     }
     public String uploadFile(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();
