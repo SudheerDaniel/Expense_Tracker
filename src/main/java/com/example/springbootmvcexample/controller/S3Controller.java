@@ -61,13 +61,8 @@ public class S3Controller {
         if (!owned) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        try {
-            String url = s3Service.generatePresignedUrl(key);
-            return ResponseEntity.ok(url);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        String url = s3Service.generatePresignedUrl(key);
+        return ResponseEntity.ok(url);
     }
 
 }
