@@ -149,9 +149,9 @@ public class ExpenseTrackerService {
            User user = userRepository.findByEmail(email)
                    .orElseThrow(() -> new RuntimeException("User not found"));
            List<ExpenseTracker> expenses = expenseRepo.findByUserId(user.getId());
-           log.info("Checking receipt ownership for email: {}, key:{}", email, key);
-           log.info("User has {} expenses", expenses.size());
-           expenses.forEach(e -> log.info("Receipt URL: {}", e.getReceiptUrl()));
+           log.debug("Checking receipt ownership for email: {}, key:{}", email, key);
+           log.debug("User has {} expenses", expenses.size());
+           expenses.forEach(e -> log.debug("Receipt URL: {}", e.getReceiptUrl()));
            return expenseRepo.findByUserId(user.getId())
                    .stream()
                    .anyMatch(e -> e.getReceiptUrl() != null && e.getReceiptUrl().contains(key));
