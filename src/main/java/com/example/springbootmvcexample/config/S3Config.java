@@ -10,6 +10,8 @@ import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
 public class S3Config {
@@ -25,6 +27,9 @@ public class S3Config {
 
     @Value("${minio.endpoint:http://localhost:9000}")
     private String minioEndpoint;
+  
+    @Value("${minio.public.endpoint:http://localhost:9000}")
+    private String minioPublicEndpoint;
 
     @Bean("s3Client")
     @Profile("local")
@@ -56,4 +61,43 @@ public class S3Config {
                 .forcePathStyle(true)
                 .build();
     }
+
+
+    @Bean("s3Presigner")
+    @Profile("docker")
+    public S3Presigner s3PresignerDocker() {
+        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
+        return S3Presigner.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .endpointOverride(URI.create(minioPublicEndpoint))
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true)
+                        .build())
+                .build();
+    }
+    
+    @Bean("s3Presigner")
+    @Profile("local")
+    public S3Presigner s3PresignerLocal() {
+        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
+        return S3Presigner.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .endpointOverride(URI.create(minioEndpoint))
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true)
+                        .build())
+                .build();
+     }
+
+     @Bean("s3Presigner")
+     @Profile("dev")
+     public S3Presigner s3PresignerDev() {
+         return S3Presigner.builder()
+                 .region(Region.of(region))
+                 .credentialsProvider(DefaultCredentialsProvider.create())
+                 .build();
+     }
+    
 }

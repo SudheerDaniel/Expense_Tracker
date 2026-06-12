@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
@@ -17,6 +18,10 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Object;
+import java.time.Duration;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+
 
 @Service
 //@RequiredArgsConstructor
@@ -24,9 +29,12 @@ public class S3Service {
    
     private final S3Client s3Client;
     private final String BUCKET_NAME;
+    private final S3Presigner presigner;
     private final String minioPublicEndpoint; // public, for URL returned to browser
-    public S3Service(S3Client s3Client, @Value("${aws.bucket.name:dummy-bucket}") String bucketName, @Value("${minio.public.endpoint:http://localhost:9000}")String minioPublicEndpoint) {
+
+    public S3Service(S3Client s3Client,S3Presigner presigner, @Value("${aws.bucket.name:dummy-bucket}") String bucketName, @Value("${minio.public.endpoint:http://localhost:9000}")String minioPublicEndpoint) {
         this.s3Client = s3Client;
+        this.presigner = presigner;
         this.BUCKET_NAME = bucketName; // Default value set to "dummy-bucket" for local development, replace with actual bucket name in production
         this.minioPublicEndpoint = minioPublicEndpoint;
     }
@@ -77,6 +85,18 @@ public class S3Service {
                 .build()
         );
         return "File deleted: " + key;
+    }
+   
+    public String generatePresignedUrl(String key){
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+            .signatureDuration(Duration.ofMinutes(15))
+            .getObjectRequest(GetObjectRequest.builder()
+                .bucket(BUCKET_NAME)
+                .key(key)
+                .build())
+            .build();
+        return presigner.presignGetObject(presignRequest).url().toString();
+
     }
 
 
