@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.time.LocalDate;
 
+import com.example.springbootmvcexample.dto.ExpenseSummaryDTO;
 import com.example.springbootmvcexample.model.ExpenseTracker;
 import com.example.springbootmvcexample.service.ExpenseTrackerService;
 
@@ -88,5 +90,14 @@ public class ExpenseController {
     @GetMapping("/notes")
     public ResponseEntity<List<ExpenseTracker>> getExpensesByNotes(@RequestParam String notes) {
         return ResponseEntity.ok(expenseService.getExpensesByNotes(notes));
+    }
+
+    // return total spent, breakdown by category, and breakdown by payment method
+    // for the given date range
+    @GetMapping("/summary")
+    public ResponseEntity<ExpenseSummaryDTO> getExpenseSummary(
+            @RequestParam("from") LocalDate from,
+            @RequestParam("to") LocalDate to) {
+        return ResponseEntity.ok(expenseService.getExpenseSummary(from,to));
     }
 }

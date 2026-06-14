@@ -5,19 +5,22 @@ import java.util.List;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.LocalDate;
+import java.util.Map;
+import java.util.stream.Collectors;
 import com.example.springbootmvcexample.exception.ExpenseNotFoundException;
 import com.example.springbootmvcexample.model.ExpenseTracker;
 import com.example.springbootmvcexample.model.User;
 import com.example.springbootmvcexample.repository.ExpenseTrackerRepository;
 import com.example.springbootmvcexample.repository.UserRepository;
-
+import com.example.springbootmvcexample.dto.ExpenseSummaryDTO;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ExpenseTrackerService {
-     private final UserRepository userRepository;
+   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExpenseTrackerService.class);
+   private final UserRepository userRepository;
      
    private final ExpenseTrackerRepository expenseRepo;
 
@@ -140,6 +143,47 @@ public ExpenseTracker updateExpenseByItemDescription(String itemDescription, Exp
                     .getAuthentication()
                     .getPrincipal();
     }
+
+    public boolean isReceiptOwnedByUser(String email, String key) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        List<ExpenseTracker> expenses = expenseRepo.findByUserId(user.getId());
+        log.debug("Checking receipt ownership for email: {}, key:{}", email, key);
+        log.debug("User has {} expenses", expenses.size());
+        expenses.forEach(e -> log.debug("Receipt URL: {}", e.getReceiptUrl()));
+        return expenseRepo.findByUserId(user.getId())
+                .stream()
+                .anyMatch(e -> e.getReceiptUrl() != null && e.getReceiptUrl().contains(key));
+    }
+
+    // returns total spent, breakdown by category, and breakdown by payment method
+    // for the given user within the date range
+    public ExpenseSummaryDTO getExpenseSummary(LocalDate startDate, LocalDate endDate) {
+      String email = getCurrentUserEmail();
+      User user = userRepository.findByEmail(email)
+             .orElseThrow(() -> new RuntimeException("User not found"));
+
+      List<ExpenseTracker> expenses = expenseRepo.findByUserIdAndDateBetween(user.getId(), startDate, endDate);
+      double totalSpent = expenses.stream()
+              .mapToDouble(ExpenseTracker::getAmount)
+              .sum();
+
+      Map<String, Double> byCategory = expenses.stream()
+              .filter(e -> e.getCategory() != null)
+              .collect(Collectors.groupingBy(
+                      ExpenseTracker::getCategory,
+                      Collectors.summingDouble(ExpenseTracker::getAmount)
+              ));
+
+      Map<String, Double> byPaymentMethod = expenses.stream()
+             .filter(e -> e.getPaymentMethod() != null)
+             .collect(Collectors.groupingBy(
+                      ExpenseTracker::getPaymentMethod,
+                      Collectors.summingDouble(ExpenseTracker::getAmount)
+              ));
+
+      return new ExpenseSummaryDTO(totalSpent, byCategory, byPaymentMethod);
+      }
 
    }
 
