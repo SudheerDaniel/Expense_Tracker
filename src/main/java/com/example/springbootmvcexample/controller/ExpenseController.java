@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
+import jakarta.validation.Valid;
 
 import com.example.springbootmvcexample.dto.ExpenseSummaryDTO;
 import com.example.springbootmvcexample.model.ExpenseTracker;
@@ -35,18 +36,18 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addExpense(@RequestBody ExpenseTracker expense) {
+    public ResponseEntity<Void> addExpense(@Valid @RequestBody ExpenseTracker expense) {
         expenseService.addExpenses(expense);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/item/{itemDescription}")
-    public ResponseEntity<ExpenseTracker> updateExpenseByItemDescription(@PathVariable String itemDescription, @RequestBody ExpenseTracker updatedExpense) {
+    public ResponseEntity<ExpenseTracker> updateExpenseByItemDescription(@PathVariable String itemDescription,@Valid @RequestBody ExpenseTracker updatedExpense) {
         return ResponseEntity.ok(expenseService.updateExpenseByItemDescription(itemDescription, updatedExpense));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ExpenseTracker> updateExpense(@PathVariable Long id, @RequestBody ExpenseTracker updatedExpense) {
+    public ResponseEntity<ExpenseTracker> updateExpense(@PathVariable Long id,@Valid @RequestBody ExpenseTracker updatedExpense) {
         return ResponseEntity.ok(expenseService.updateExpense(id, updatedExpense));
     }
 
