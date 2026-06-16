@@ -98,7 +98,9 @@ public class ExpenseController {
     @GetMapping("/summary")
     public ResponseEntity<ExpenseSummaryDTO> getExpenseSummary(
             @RequestParam("from") LocalDate from,
-            @RequestParam("to") LocalDate to) {
-        return ResponseEntity.ok(expenseService.getExpenseSummary(from,to));
+            @RequestParam("to") LocalDate to,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "paymentMethod", required = false) String paymentMethod) {
+        return ResponseEntity.ok(expenseService.getExpenseSummary(from,to,category, paymentMethod));
     }
 }
