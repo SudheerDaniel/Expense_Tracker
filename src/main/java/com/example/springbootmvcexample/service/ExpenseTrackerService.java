@@ -162,11 +162,26 @@ public class ExpenseTrackerService {
 
       // returns total spent, breakdown by category, and breakdown by payment method
       // for the given user within the date range
-      public ExpenseSummaryDTO getExpenseSummary(LocalDate startDate, LocalDate endDate) {
+      public ExpenseSummaryDTO getExpenseSummary(LocalDate startDate, LocalDate endDate, String category, String paymentMethod) {
         String email = getCurrentUserEmail();
         User user = userRepository.findByEmail(email)
                .orElseThrow(() -> new RuntimeException("User not found"));
         List<ExpenseTracker> expenses = expenseRepo.findByUserIdAndDateBetween(user.getId(), startDate, endDate);
+             
+        //apply optional category filter
+        if (category != null && !category.isBlank()) {
+            expenses = expenses.stream()
+                   .filter(e -> category.equals(e.getCategory()))
+                   .collect(Collectors.toList());
+        }
+  
+        //apply optional payment method filter
+        if (paymentMethod != null && !paymentMethod.isBlank()) {
+            expenses = expenses.stream()
+                   .filter(e -> paymentMethod.equals(e.getPaymentMethod()))
+                   .collect(Collectors.toList());
+        }
+
         double totalSpent = expenses.stream()
                 .mapToDouble(ExpenseTracker::getAmount)
                 .sum();
