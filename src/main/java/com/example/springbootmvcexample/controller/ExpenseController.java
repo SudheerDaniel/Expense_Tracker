@@ -41,12 +41,13 @@ public class ExpenseController {
             @RequestParam(required = false) LocalDate from,
             @RequestParam(required = false) LocalDate to,
             @RequestParam(required = false) String category,
-            @RequestParam(required = false) String paymentMethod) {
+            @RequestParam(required = false) String paymentMethod,
+            @RequestParam(required = false) String notes) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
 
         // if a date range was provided, use the filtered query; otherwise fall back to the simple unfiltered one
         if (from != null && to != null) {
-            return ResponseEntity.ok(expenseService.getFilteredExpenses(from, to, category, paymentMethod, pageable));
+            return ResponseEntity.ok(expenseService.getFilteredExpenses(from, to, category, paymentMethod, notes, pageable));
         }
         return ResponseEntity.ok(expenseService.getAllExpenses(pageable));
     }

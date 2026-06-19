@@ -34,12 +34,12 @@ public class ExpenseTrackerService {
    }
 
    // returns a paginated, filtered list of expenses for the current user
-   // startDate/endDate are required; category and paymentMethod are optional (pass null to skip)
-   public Page<ExpenseTracker> getFilteredExpenses(LocalDate startDate, LocalDate endDate, String category, String paymentMethod, Pageable pageable) {
+   // startDate/endDate are required; category, paymentMethod and Notes are optional (pass null to skip)
+   public Page<ExpenseTracker> getFilteredExpenses(LocalDate startDate, LocalDate endDate, String category, String paymentMethod, String notes, Pageable pageable) {
        String email = getCurrentUserEmail();
        User user = userRepository.findByEmail(email)
                .orElseThrow(() -> new RuntimeException("User not found"));
-       return expenseRepo.findFilteredExpenses(user.getId(), startDate, endDate, category, paymentMethod, pageable);
+       return expenseRepo.findFilteredExpenses(user.getId(), startDate, endDate, category, paymentMethod, notes, pageable);
    }
 
    public List<ExpenseTracker> getExpenseByCategory(String category) {
