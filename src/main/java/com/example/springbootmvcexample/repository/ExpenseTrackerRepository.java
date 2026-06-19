@@ -72,7 +72,7 @@ public interface ExpenseTrackerRepository extends JpaRepository<ExpenseTracker, 
            "AND e.date BETWEEN :startDate AND :endDate " +
            "AND (:category IS NULL OR e.category = :category) " +
            "AND (:paymentMethod IS NULL OR e.paymentMethod = :paymentMethod) " +
-           "AND (:notes IS NULL OR LOWER(e.notes) LIKE LOWER(CONCAT('%', :notes, '%')))")
+           "AND (:notes IS NULL OR LOWER(CAST(e.notes AS string)) LIKE LOWER(CAST(CONCAT('%', :notes, '%')AS string)))")
     Page<ExpenseTracker> findFilteredExpenses(
                      @Param("userId") Long userId,
                      @Param("startDate") LocalDate startDate,
