@@ -5,6 +5,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import com.example.springbootmvcexample.model.ExpenseTracker;
 
@@ -59,6 +63,22 @@ public interface ExpenseTrackerRepository extends JpaRepository<ExpenseTracker, 
     @Transactional
     void deleteByUserIdAndCategory(Long userId, String category);
 
+    // new paginated version for the main expense list endpoint
+    Page<ExpenseTracker> findByUserId(Long userId, Pageable pageable);
+
+    // fetch a paginated filtered list of expenses for a user
+    // category and paymentMethod are optional - pass null to skip that filter
+    @Query("SELECT e FROM ExpenseTracker e WHERE e.userId = :userId " + 
+           "AND e.date BETWEEN :startDate AND :endDate " +
+           "AND (:category IS NULL OR e.category = :category) " +
+           "AND (:paymentMethod IS NULL OR e.paymentMethod = :paymentMethod)")
+    Page<ExpenseTracker> findFilteredExpenses(
+                     @Param("userId") Long userId,
+                     @Param("startDate") LocalDate startDate,
+                     @Param("endDate") LocalDate endDate,
+                     @Param("category") String category,
+                     @Param("paymentMethod") String paymentMethod,
+                     Pageable pageable);
     
 
     

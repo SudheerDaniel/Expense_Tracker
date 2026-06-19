@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,11 +26,20 @@ public class ExpenseTrackerService {
      
    private final ExpenseTrackerRepository expenseRepo;
 
-   public List<ExpenseTracker> getAllExpenses() {
+   public Page<ExpenseTracker> getAllExpenses(Pageable pageable) {
      String email = getCurrentUserEmail();
      User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-                return expenseRepo.findByUserId(user.getId());
+                return expenseRepo.findByUserId(user.getId(), pageable);
+   }
+
+   // returns a paginated, filtered list of expenses for the current user
+   // startDate/endDate are required; category and paymentMethod are optional (pass null to skip)
+   public Page<ExpenseTracker> getFilteredExpenses(LocalDate startDate, LocalDate endDate, String category, String paymentMethod, Pageable pageable) {
+       String email = getCurrentUserEmail();
+       User user = userRepository.findByEmail(email)
+               .orElseThrow(() -> new RuntimeException("User not found"));
+       return expenseRepo.findFilteredExpenses(user.getId(), startDate, endDate, category, paymentMethod, pageable);
    }
 
    public List<ExpenseTracker> getExpenseByCategory(String category) {

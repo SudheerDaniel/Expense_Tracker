@@ -1,4 +1,4 @@
-package com.example.springbootmvcexample.controller;
+ package com.example.springbootmvcexample.controller;
 
 import java.util.List;
 
@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import java.time.LocalDate;
 import jakarta.validation.Valid;
 
@@ -29,10 +33,22 @@ public class ExpenseController {
     public ExpenseController(ExpenseTrackerService expenseService) {
         this.expenseService = expenseService;
     }
-
+    
     @GetMapping
-    public ResponseEntity<List<ExpenseTracker>> getAllExpenses() {
-        return ResponseEntity.ok(expenseService.getAllExpenses());
+    public ResponseEntity<Page<ExpenseTracker>> getAllExpenses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size,
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String paymentMethod) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
+
+        // if a date range was provided, use the filtered query; otherwise fall back to the simple unfiltered one
+        if (from != null && to != null) {
+            return ResponseEntity.ok(expenseService.getFilteredExpenses(from, to, category, paymentMethod, pageable));
+        }
+        return ResponseEntity.ok(expenseService.getAllExpenses(pageable));
     }
 
     @PostMapping
