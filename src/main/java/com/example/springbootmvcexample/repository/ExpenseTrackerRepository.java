@@ -67,17 +67,19 @@ public interface ExpenseTrackerRepository extends JpaRepository<ExpenseTracker, 
     Page<ExpenseTracker> findByUserId(Long userId, Pageable pageable);
 
     // fetch a paginated filtered list of expenses for a user
-    // category and paymentMethod are optional - pass null to skip that filter
+    // category, paymentMethod and notes are optional - pass null to skip that filter
     @Query("SELECT e FROM ExpenseTracker e WHERE e.userId = :userId " + 
            "AND e.date BETWEEN :startDate AND :endDate " +
            "AND (:category IS NULL OR e.category = :category) " +
-           "AND (:paymentMethod IS NULL OR e.paymentMethod = :paymentMethod)")
+           "AND (:paymentMethod IS NULL OR e.paymentMethod = :paymentMethod) " +
+           "AND (:notes IS NULL OR LOWER(e.notes) LIKE LOWER(CONCAT('%', :notes, '%')))")
     Page<ExpenseTracker> findFilteredExpenses(
                      @Param("userId") Long userId,
                      @Param("startDate") LocalDate startDate,
                      @Param("endDate") LocalDate endDate,
                      @Param("category") String category,
                      @Param("paymentMethod") String paymentMethod,
+                     @Param("notes") String notes,
                      Pageable pageable);
     
 
