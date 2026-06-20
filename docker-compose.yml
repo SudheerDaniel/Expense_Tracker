@@ -53,6 +53,7 @@ services:
       AWS_BUCKET_NAME: expense-receipts
       MINIO_ENDPOINT: http://minio:9000
       MINIO_PUBLIC_ENDPOINT: http://localhost:9000
+      JWT_SECRET: fj/A9eOrj0DhY8BQwXrN33UDGNO6WvcCP9Iu9A2/trI=
     ports:
       - "8080:8080"
 
