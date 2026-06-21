@@ -43,7 +43,7 @@ services:
       - postgres
       - minio
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: local
       DB_URL: jdbc:postgresql://postgres:5432/expenses
       DB_USERNAME: postgres
       DB_PASSWORD: postgres

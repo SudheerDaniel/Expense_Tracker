@@ -31,6 +31,7 @@ public class S3Config {
     @Value("${minio.public.endpoint:http://localhost:9000}")
     private String minioPublicEndpoint;
 
+    // --- local profile: MinIO (Docker Compose, local dev) ---
     @Bean("s3Client")
     @Profile("local")
     public S3Client s3Client() {
@@ -38,9 +39,13 @@ public class S3Config {
         return S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .endpointOverride(URI.create(minioEndpoint))
+                .forcePathStyle(true)
                 .build();
     }
 
+
+    // --- dev profile: real AWS S3, default credential chain ---
     @Bean("s3Client")
     @Profile("dev")
     public S3Client s3ClientDev() {
@@ -50,6 +55,8 @@ public class S3Config {
                 .build();
     }
 
+
+    // --- docker profile: Railway production, real AWS S3 ---
     @Bean("s3Client")
     @Profile("docker")
     public S3Client s3ClientDocker() {
@@ -57,8 +64,6 @@ public class S3Config {
         return S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-                .endpointOverride(URI.create(minioEndpoint))
-                .forcePathStyle(true)
                 .build();
     }
 
@@ -70,10 +75,6 @@ public class S3Config {
         return S3Presigner.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-                .endpointOverride(URI.create(minioPublicEndpoint))
-                .serviceConfiguration(S3Configuration.builder()
-                        .pathStyleAccessEnabled(true)
-                        .build())
                 .build();
     }
     
