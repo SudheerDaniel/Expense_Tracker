@@ -41,7 +41,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         // allow requests from the React frontend
-        config.setAllowedOriginPatterns(java.util.Arrays.asList("http://localhost:*"));
+        config.setAllowedOriginPatterns(java.util.Arrays.asList(
+            "http://localhost:*",
+            "https://*.vercel.app",
+            "https://expense-tracker-frontend-beryl-two.vercel.app"
+        ));
         config.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(java.util.Arrays.asList("*"));
         config.setAllowCredentials(true);
