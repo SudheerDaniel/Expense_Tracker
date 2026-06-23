@@ -21,6 +21,19 @@ A production-grade REST API for tracking personal expenses, built with Spring Bo
 - CORS configured for Vercel frontend
 - Global exception handling
 
+## Testing
+Unit tests written with JUnit 5 + Mockito covering the service layer.
+Run tests with:
+```bash
+mvn test
+```
+
+## CI/CD
+GitHub Actions runs on every push and every PR:
+- Builds the project with Maven
+- Runs the full test suite
+- Blocks merge to main if the build or tests fail
+
 ## Project Structure
 src/main/java/com/example/springbootmvcexample/
 
@@ -94,6 +107,8 @@ API available at `http://localhost:8080`
 |---|---|---|
 | POST | `/api/s3/upload` | Upload a receipt |
 | GET | `/api/s3/presigned-url` | Get a presigned URL to view a receipt |
+
+
 
 ## Frontend
 The React frontend is at [Expense-Tracker-Frontend](https://github.com/SudheerDaniel/Expense-Tracker-Frontend)
