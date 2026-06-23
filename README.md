@@ -111,7 +111,7 @@ API available at `http://localhost:8080`
 
 
 ## Frontend
-The React frontend is at [Expense-Tracker-Frontend](https://github.com/SudheerDaniel/Expense-Tracker-Frontend)
+The React frontend is at [Expense-Tracker-Frontend](https://github.com/SudheerDaniel/Expense_Tracker_Frontend)
 
 ## License
 MIT
