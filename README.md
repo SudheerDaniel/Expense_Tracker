@@ -96,7 +96,7 @@ API available at `http://localhost:8080`
 | GET | `/api/s3/presigned-url` | Get a presigned URL to view a receipt |
 
 ## Frontend
-The React frontend is at [Expense-Tracker-Frontend](https://github.com/SudheerDaniel/Expense-Tracker-Frontend)
+The React frontend is at [Expense-Tracker-Frontend](https://github.com/SudheerDaniel/Expense_Tracker_Frontend)
 
 ## License
 MIT
