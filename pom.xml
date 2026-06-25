@@ -73,6 +73,11 @@
             <artifactId>auth</artifactId>
         </dependency>
 
+        <!-- AWS SES SDK -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ses</artifactId>
+        </dependency>
 
         <!-- Lombok  -->
         <dependency>
