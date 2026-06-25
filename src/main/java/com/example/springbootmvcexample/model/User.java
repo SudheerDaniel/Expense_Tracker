@@ -30,4 +30,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // false until the user clicks the verification link in their email
+    @Column(nullable = false)
+    private boolean emailVerified = false;
+
+    // random UUID token sent in the verification email
+    @Column(unique = true)
+    private String verificationToken;
+
 }

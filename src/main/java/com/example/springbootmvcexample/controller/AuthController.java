@@ -1,6 +1,7 @@
 package com.example.springbootmvcexample.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springbootmvcexample.dto.AuthResponseDTO;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -41,6 +43,9 @@ public class AuthController {
         @PostMapping("/login")
         public ResponseEntity<?> login(@RequestBody User user) {
             User existingUser = userService.findByEmail(user.getEmail());
+            if (!existingUser.isEmailVerified()){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Please verify your email before logging in");
+            }
             if (passwordEncoder.matches(user.getPassword() , existingUser.getPassword())) {
                 String accessToken = jwtUtil.generateToken(existingUser.getEmail());
                 String refreshToken = refreshTokenService.createRefreshToken(existingUser.getId(), existingUser.getEmail());
@@ -78,7 +83,13 @@ public class AuthController {
                 refreshTokenService.deleteByUserId(user.getId());
              }
              return ResponseEntity.ok("Logged out successfully");
-         } 
+        } 
+
+        @GetMapping("/verify")
+        public ResponseEntity<String> verify(@RequestParam String token) {
+             userService.verifyEmail(token);
+             return ResponseEntity.ok("Email verified successfully");
+        }
     
 
 }
